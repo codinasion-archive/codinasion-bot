@@ -351,6 +351,18 @@ If you're looking for your next contribution, check out our [help wanted issues]
           })
         );
       }
+
+      // check for label "triage" and remove it
+      const triage_label = pull_request_data.labels.find(
+        (label) => label.name === "triage"
+      );
+      if (triage_label) {
+        await context.octokit.issues.removeLabel(
+          context.issue({
+            name: "triage",
+          })
+        );
+      }
     } else {
       // if closed
 
