@@ -511,7 +511,7 @@ If you're looking for your next contribution, check out our [help wanted issues]
       // check for label 'closed'
       const labels = pull_request_data.labels;
       const closed_label = labels.find((label) => label.name === "closed");
-      if (closed_label === false) {
+      if (closed_label === undefined) {
         // update pull request title
         const new_title = `[ 🚧 WIP ] ${pull_request_data.title}`;
         await context.octokit.pulls.update(
