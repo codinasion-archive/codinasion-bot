@@ -335,7 +335,7 @@ If you're looking for your next contribution, check out our [help wanted issues]
       const reviewers = pull_request_data.requested_reviewers;
       if (reviewers.length > 0) {
         await context.octokit.pulls.removeRequestedReviewers(
-          context.issue({
+          context.pullRequest({
             reviewers: reviewers,
           })
         );
