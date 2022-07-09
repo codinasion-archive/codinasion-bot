@@ -293,84 +293,32 @@ This PR will be soon reviewed by a Codinasion team member and merged shortly.`,
       return;
     }
 
-    // check for label 'triage' and remove it
+    // check merged or closed
     const pull_request_data = context.payload.pull_request;
-    const labels = pull_request_data.labels;
-    const triage_label = labels.find((label) => label.name === "triage");
-    if (triage_label) {
-      await context.octokit.issues.removeLabel(
-        context.issue({
-          name: "triage",
-        })
+    const merged = pull_request_data.merged;
+
+    // if merged
+    if (merged) {
+      // get user data from pull request context
+      const user_data = pull_request_data.user;
+
+      // log activity
+      app.log.info(
+        `${user_data.login} (${pull_request_data.author_association}) has merged a pull request !!!`
       );
-    }
 
-    // check for label 'closed' and add it
-    const closed_label = labels.find((label) => label.name === "closed");
-    if (!closed_label) {
-      await context.octokit.issues.addLabels(
-        context.issue({
-          labels: ["closed"],
-        })
-      );
-    }
+      // congrats first time contributors
+      if (pull_request_data.author_association === "FIRST_TIME_CONTRIBUTOR") {
+        const congrats_comment = await context.issue({
+          body: `Congrats on merging your first pull request! 🎉🎉🎉`,
+        });
+        congrats_comment !== "" &&
+          (await context.octokit.issues.createComment(congrats_comment));
+      }
 
-    // create new comment
-    const new_comment = await context.issue({
-      body: `This pull request has been closed !!!`,
-    });
-
-    // replace [WIP] with [Closed] in title
-    const pull_request_title = pull_request_data.title;
-    const wip_title = pull_request_title.includes("[WIP]");
-    if (wip_title) {
-      const new_title = pull_request_title.replace("[WIP] ", "[Closed] ");
-      await context.octokit.pulls.update(
-        context.issue({
-          title: new_title,
-        })
-      );
-    } else {
-      // add [Closed] to the title
-      await context.octokit.pulls.update(
-        context.issue({
-          title: `[Closed] ${pull_request_title}`,
-        })
-      );
-    }
-
-    // end of pull_request.closed event
-  });
-
-  // on pull request merge
-  app.on("pull_request.merged", async (context) => {
-    if (context.payload.pull_request.user.type === "Bot") {
-      return;
-    }
-
-    // get pull request data
-    const pull_request_data = context.payload.pull_request;
-
-    // get user data from pull request context
-    const user_data = pull_request_data.user;
-
-    // log activity
-    app.log.info(
-      `${user_data.login} (${pull_request_data.author_association}) has merged a pull request !!!`
-    );
-
-    // congrats first time contributors
-    if (pull_request_data.author_association === "FIRST_TIME_CONTRIBUTOR") {
-      const congrats_comment = await context.issue({
-        body: `Congrats on merging your first pull request! 🎉🎉🎉`,
-      });
-      congrats_comment !== "" &&
-        (await context.octokit.issues.createComment(congrats_comment));
-    }
-
-    // merge comment
-    const new_comment = await context.issue({
-      body: `Thanks very much for contributing!
+      // merge comment
+      const new_comment = await context.issue({
+        body: `Thanks very much for contributing!
 
 Your pull request has been merged 🎉 You should see your changes appear on the site in approximately 24 hours. 
 
@@ -379,31 +327,79 @@ Support this project by giving it a star ⭐.
 [Join Our Community](https://github.com/codinasion/.github/issues/new?assignees=&labels=welcome+🎉🎉🎉&template=invitation.yml&title=Please+invite+me+to+Codinasion)
 
 If you're looking for your next contribution, check out our [help wanted issues](https://github.com/search?q=is%3Aopen+label%3A%22help+wanted%22+user%3Acodinasion&type=Issues) :zap:`,
-    });
-    new_comment !== "" &&
-      (await context.octokit.issues.createComment(new_comment));
+      });
+      new_comment !== "" &&
+        (await context.octokit.issues.createComment(new_comment));
 
-    // remove all pending reviewers
-    const reviewers = pull_request_data.requested_reviewers;
-    if (reviewers.length > 0) {
-      await context.octokit.pulls.removeRequestedReviewers(
-        context.issue({
-          reviewers: reviewers,
-        })
-      );
+      // remove all pending reviewers
+      const reviewers = pull_request_data.requested_reviewers;
+      if (reviewers.length > 0) {
+        await context.octokit.pulls.removeRequestedReviewers(
+          context.issue({
+            reviewers: reviewers,
+          })
+        );
+      }
+
+      // remove [WIP] from title
+      const title = pull_request_data.title;
+      if (title.includes("[WIP]")) {
+        await context.octokit.issues.update(
+          context.issue({
+            title: title.replace("[WIP] ", ""),
+          })
+        );
+      }
+    } else {
+      // if closed
+
+      // check for label 'triage' and remove it
+      const labels = pull_request_data.labels;
+      const triage_label = labels.find((label) => label.name === "triage");
+      if (triage_label) {
+        await context.octokit.issues.removeLabel(
+          context.issue({
+            name: "triage",
+          })
+        );
+      }
+
+      // check for label 'closed' and add it
+      const closed_label = labels.find((label) => label.name === "closed");
+      if (!closed_label) {
+        await context.octokit.issues.addLabels(
+          context.issue({
+            labels: ["closed"],
+          })
+        );
+      }
+
+      // create new comment
+      const new_comment = await context.issue({
+        body: `This pull request has been closed !!!`,
+      });
+
+      // replace [WIP] with [Closed] in title
+      const pull_request_title = pull_request_data.title;
+      const wip_title = pull_request_title.includes("[WIP]");
+      if (wip_title) {
+        const new_title = pull_request_title.replace("[WIP] ", "[Closed] ");
+        await context.octokit.pulls.update(
+          context.issue({
+            title: new_title,
+          })
+        );
+      } else {
+        // add [Closed] to the title
+        await context.octokit.pulls.update(
+          context.issue({
+            title: `[Closed] ${pull_request_title}`,
+          })
+        );
+      }
     }
 
-    // remove [WIP] from title
-    const title = pull_request_data.title;
-    if (title.includes("[WIP]")) {
-      await context.octokit.issues.update(
-        context.issue({
-          title: title.replace("[WIP] ", ""),
-        })
-      );
-    }
-
-    // end of pull_request.merged event
+    // end of pull_request.closed event
   });
 
   // on pull request reopened
