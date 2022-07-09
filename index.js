@@ -341,10 +341,10 @@ If you're looking for your next contribution, check out our [help wanted issues]
         );
       }
 
-      // remove [WIP] from title
+      // remove [ 🚧 WIP ] from title
       const title = pull_request_data.title;
-      if (title.includes("[WIP]")) {
-        const new_title = title.replace("[WIP] ", "");
+      if (title.includes("[ 🚧 WIP ]")) {
+        const new_title = title.replace("[ 🚧 WIP ] ", "");
         await context.octokit.pulls.update(
           context.pullRequest({
             title: new_title,
@@ -396,11 +396,11 @@ If you're looking for your next contribution, check out our [help wanted issues]
       new_comment !== "" &&
         (await context.octokit.issues.createComment(new_comment));
 
-      // replace [WIP] with [Closed] in title
+      // replace [ 🚧 WIP ] with [Closed] in title
       const pull_request_title = pull_request_data.title;
-      const wip_title = pull_request_title.includes("[WIP]");
+      const wip_title = pull_request_title.includes("[ 🚧 WIP ]");
       if (wip_title) {
-        const new_title = pull_request_title.replace("[WIP]", "[Closed]");
+        const new_title = pull_request_title.replace("[ 🚧 WIP ]", "[Closed]");
         await context.octokit.pulls.update(
           context.pullRequest({
             title: new_title,
@@ -466,10 +466,10 @@ If you're looking for your next contribution, check out our [help wanted issues]
     new_comment !== "" &&
       (await context.octokit.issues.createComment(new_comment));
 
-    // remove [WIP] or [Closed] from title
+    // remove [ 🚧 WIP ] or [Closed] from title
     const title = pull_request_data.title;
-    if (title.includes("[WIP] ")) {
-      const new_title = title.replace("[WIP] ", "");
+    if (title.includes("[ 🚧 WIP ] ")) {
+      const new_title = title.replace("[ 🚧 WIP ] ", "");
       await context.octokit.pulls.update(
         context.pullRequest({
           title: new_title,
@@ -511,9 +511,9 @@ If you're looking for your next contribution, check out our [help wanted issues]
       // check for label 'closed'
       const labels = pull_request_data.labels;
       const closed_label = labels.find((label) => label.name === "closed");
-      if (!closed_label) {
+      if (closed_label === false) {
         // update pull request title
-        const new_title = `[WIP] ${pull_request_data.title}`;
+        const new_title = `[ 🚧 WIP ] ${pull_request_data.title}`;
         await context.octokit.pulls.update(
           context.pullRequest({
             title: new_title,
