@@ -13,7 +13,10 @@ module.exports = (app) => {
 
   // on opening an issue
   app.on("issues.opened", async (context) => {
-    if (context.payload.issue.user.type === "Bot") {
+    if (
+      context.payload.issue.user.type === "Bot" ||
+      context.payload.issue.user.login === "harshraj8843"
+    ) {
       return;
     }
 
@@ -109,7 +112,10 @@ A Codinasion team member should be by to give feedback soon.`,
 
   // on closing an issue
   app.on("issues.closed", async (context) => {
-    if (context.payload.issue.user.type === "Bot") {
+    if (
+      context.payload.issue.user.type === "Bot" ||
+      context.payload.issue.user.login === "harshraj8843"
+    ) {
       return;
     }
 
@@ -159,7 +165,10 @@ A Codinasion team member should be by to give feedback soon.`,
 
   // on issue reopened
   app.on("issues.reopened", async (context) => {
-    if (context.payload.issue.user.type === "Bot") {
+    if (
+      context.payload.issue.user.type === "Bot" ||
+      context.payload.issue.user.login === "harshraj8843"
+    ) {
       return;
     }
 
@@ -192,7 +201,10 @@ A Codinasion team member should be by to give feedback soon.`,
 
   // on opening a pull request
   app.on("pull_request.opened", async (context) => {
-    if (context.payload.pull_request.user.type === "Bot") {
+    if (
+      context.payload.pull_request.user.type === "Bot" ||
+      context.payload.pull_request.user.login === "harshraj8843"
+    ) {
       return;
     }
 
@@ -289,7 +301,10 @@ This PR will be soon reviewed by a Codinasion team member and merged shortly.`,
 
   // on closing a pull request
   app.on("pull_request.closed", async (context) => {
-    if (context.payload.pull_request.user.type === "Bot") {
+    if (
+      context.payload.pull_request.user.type === "Bot" ||
+      context.payload.pull_request.user.login === "harshraj8843"
+    ) {
       return;
     }
 
@@ -422,7 +437,10 @@ If you're looking for your next contribution, check out our [help wanted issues]
 
   // on pull request reopened
   app.on("pull_request.reopened", async (context) => {
-    if (context.payload.pull_request.user.type === "Bot") {
+    if (
+      context.payload.pull_request.user.type === "Bot" ||
+      context.payload.pull_request.user.login === "harshraj8843"
+    ) {
       return;
     }
 
@@ -490,7 +508,10 @@ If you're looking for your next contribution, check out our [help wanted issues]
 
   // on unlabeled pull request
   app.on("pull_request.unlabeled", async (context) => {
-    if (context.payload.pull_request.user.type === "Bot") {
+    if (
+      context.payload.pull_request.user.type === "Bot" ||
+      context.payload.pull_request.user.login === "harshraj8843"
+    ) {
       return;
     }
 
