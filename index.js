@@ -344,9 +344,10 @@ If you're looking for your next contribution, check out our [help wanted issues]
       // remove [WIP] from title
       const title = pull_request_data.title;
       if (title.includes("[WIP]")) {
-        await context.octokit.issues.update(
-          context.issue({
-            title: title.replace("[WIP] ", ""),
+        const new_title = title.replace("[WIP] ", "");
+        await context.octokit.pulls.update(
+          context.pullRequest({
+            title: new_title,
           })
         );
       }
@@ -379,21 +380,26 @@ If you're looking for your next contribution, check out our [help wanted issues]
         body: `This pull request has been closed !!!`,
       });
 
+      // create new comment
+      new_comment !== "" &&
+        (await context.octokit.issues.createComment(new_comment));
+
       // replace [WIP] with [Closed] in title
       const pull_request_title = pull_request_data.title;
       const wip_title = pull_request_title.includes("[WIP]");
       if (wip_title) {
-        const new_title = pull_request_title.replace("[WIP] ", "[Closed] ");
+        const new_title = pull_request_title.replace("[WIP]", "[Closed]");
         await context.octokit.pulls.update(
-          context.issue({
+          context.pullRequest({
             title: new_title,
           })
         );
       } else {
         // add [Closed] to the title
+        const new_title = `[Closed] ${pull_request_title}`;
         await context.octokit.pulls.update(
-          context.issue({
-            title: `[Closed] ${pull_request_title}`,
+          context.pullRequest({
+            title: new_title,
           })
         );
       }
@@ -451,16 +457,18 @@ If you're looking for your next contribution, check out our [help wanted issues]
     // remove [WIP] or [Closed] from title
     const title = pull_request_data.title;
     if (title.includes("[WIP] ")) {
-      await context.octokit.issues.update(
-        context.issue({
-          title: title.replace("[WIP] ", ""),
+      const new_title = title.replace("[WIP] ", "");
+      await context.octokit.pulls.update(
+        context.pullRequest({
+          title: new_title,
         })
       );
     }
     if (title.includes("[Closed] ")) {
-      await context.octokit.issues.update(
-        context.issue({
-          title: title.replace("[Closed] ", ""),
+      const new_title = title.replace("[Closed] ", "");
+      await context.octokit.pulls.update(
+        context.pullRequest({
+          title: new_title,
         })
       );
     }
@@ -495,7 +503,7 @@ If you're looking for your next contribution, check out our [help wanted issues]
         // update pull request title
         const new_title = `[WIP] ${pull_request_data.title}`;
         await context.octokit.pulls.update(
-          context.issue({
+          context.pullRequest({
             title: new_title,
           })
         );
