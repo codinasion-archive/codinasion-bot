@@ -10,7 +10,7 @@
     "codinasion-bot"
   ],
   "scripts": {
-    "dev": "probot run ./index.js",
+    "dev": "probot run ./app.js",
     "test": "jest",
     "simulate": "sh simulate.sh"
   },
