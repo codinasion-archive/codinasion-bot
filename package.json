@@ -1,0 +1,32 @@
+{
+  "name": "codinasion-bot",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A friendly codinasion bot.",
+  "author": "harshraj8843",
+  "license": "MIT",
+  "homepage": "https://github.com/codinasion/codinasion-bot",
+  "keywords": [
+    "codinasion-bot"
+  ],
+  "scripts": {
+    "dev": "probot run ./index.js",
+    "test": "jest",
+    "simulate": "sh simulate.sh"
+  },
+  "dependencies": {
+    "moment": "^2.29.4",
+    "probot": "^12.2.4"
+  },
+  "devDependencies": {
+    "jest": "^28.0.0",
+    "nock": "^13.0.5",
+    "smee-client": "^1.2.2"
+  },
+  "engines": {
+    "node": ">= 10.13.0"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  }
+}
