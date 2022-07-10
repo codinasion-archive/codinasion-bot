@@ -448,15 +448,15 @@ If you're looking for your next contribution, check out our [help wanted issues]
       new_comment !== "" &&
         (await context.octokit.issues.createComment(new_comment));
 
-      // remove all pending reviewers
-      const reviewers = pull_request_data.requested_reviewers;
-      if (reviewers.length > 0) {
-        await context.octokit.pulls.removeRequestedReviewers(
-          context.pullRequest({
-            reviewers: reviewers,
-          })
-        );
-      }
+      // // remove all pending reviewers
+      // const reviewers = pull_request_data.requested_reviewers;
+      // if (reviewers.length > 0) {
+      //   await context.octokit.pulls.removeRequestedReviewers(
+      //     context.pullRequest({
+      //       reviewers: reviewers,
+      //     })
+      //   );
+      // }
 
       // remove [ 🚧 WIP ] from title
       const title = pull_request_data.title;
