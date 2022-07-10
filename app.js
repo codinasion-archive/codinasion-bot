@@ -197,6 +197,91 @@ A Codinasion team member should be by to give feedback soon.`,
     // end of issues.reopened event
   });
 
+  // on issue labeled
+  app.on("issues.labeled", async (context) => {
+    if (context.payload.issue.user.login !== "harshraj8843") {
+      return;
+    }
+
+    // get label
+    const label = context.payload.label;
+
+    // check if label is 'track'
+    if (label.name === "track") {
+      // get issue data
+      const issue_data = context.payload.issue;
+
+      // get body of the issue
+      var issue_body = issue_data.body;
+
+      // derive description from issue body
+      const description = issue_body.split("### Tracking Issues")[0];
+
+      // derive tracking issues from issue body
+      const tracking_issues = issue_body.split("### Tracking Issues")[1];
+
+      // get list of sentences from tracking issues
+      const tracking_issues_sentences = tracking_issues.split("\r\n");
+
+      // tracking issues json
+      const tracking_issues_json = [];
+
+      // iterate over tracking issues sentences
+      for (let i = 0; i < tracking_issues_sentences.length; i++) {
+        // check for pattern '- [ ] '
+        if (tracking_issues_sentences[i].startsWith("- [ ] ")) {
+          // get sentence
+          const sentence = tracking_issues_sentences[i].split("- [ ] ")[1];
+
+          // console.log(sentence);
+
+          // get language tag from sentence
+          // get words like C C++ C# Java Python GO JavaScript PHP Julia, etc
+          var language_tag = sentence.split("Write a ")[1];
+          language_tag = language_tag.split(" programme ")[0];
+
+          // append to tracking issues json
+          tracking_issues_json.push({
+            language_tag: language_tag,
+            sentence: sentence,
+          });
+        }
+      }
+
+      // iterate over tracking issues json
+      for (let i = 0; i < tracking_issues_json.length; i++) {
+        // create new issue
+        const new_issue = await context.issue({
+          title: `${tracking_issues_json[i].sentence}`,
+          body: `${description}`,
+          labels: [
+            `${tracking_issues_json[i].language_tag}`,
+            "good first issue",
+            "programme",
+          ],
+        });
+
+        // create new issue and get issue number
+        const created_issue = await context.octokit.issues.create(new_issue);
+        await app.log.info("issue number => " + created_issue.data.number);
+
+        issue_body = await issue_body.replace(
+          `${tracking_issues_json[i].sentence}`,
+          `#${created_issue.data.number}`
+        );
+      }
+
+      // update issue body
+      await context.octokit.issues.update(
+        context.issue({
+          body: `${issue_body}`,
+        })
+      );
+    }
+
+    // end of issues.labeled event
+  });
+
   //**************** /////////// Pull Requests /////////// ****************//
 
   // on opening a pull request

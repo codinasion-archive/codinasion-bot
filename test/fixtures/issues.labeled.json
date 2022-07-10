@@ -1,5 +1,5 @@
 {
-  "action": "opened",
+  "action": "labeled",
   "issue": {
     "url": "https://api.github.com/repos/codinasion/codinasion-bot-try/issues/23",
     "repository_url": "https://api.github.com/repos/codinasion/codinasion-bot-try",
@@ -71,6 +71,15 @@
     "timeline_url": "https://api.github.com/repos/codinasion/codinasion-bot-try/issues/23/timeline",
     "performed_via_github_app": null,
     "state_reason": null
+  },
+  "label": {
+    "id": 4313142032,
+    "node_id": "LA_kwDOHn2tT88AAAABARVTEA",
+    "url": "https://api.github.com/repos/codinasion/codinasion-bot-try/labels/track",
+    "name": "track",
+    "color": "B604BB",
+    "default": false,
+    "description": ""
   },
   "repository": {
     "id": 511552847,
