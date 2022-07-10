@@ -283,6 +283,19 @@ A Codinasion team member should be by to give feedback soon.`,
         ));
     }
 
+    // // check if label is 'bot-test'
+    // else if (label.name === "bot-test") {
+    //   // create demo issue
+    //   const new_issue = await context.issue({
+    //     title: `Demo Issue`,
+    //     body: `This is a demo issue`,
+    //     labels: ["bot-test"],
+    //   });
+
+    //   // create new issue and get issue number
+    //   await context.octokit.issues.create(new_issue);
+    // }
+
     // end of issues.labeled event
   });
 
