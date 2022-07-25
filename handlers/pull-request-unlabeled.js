@@ -23,6 +23,10 @@ async function handler(app, context) {
   // check for unlabeled label
   const unlabeled_label = context.payload.label.name;
   if (unlabeled_label === "triage") {
+    // check if pull request is closed
+    if (pull_request_data.state === "closed") {
+      return;
+    }
     // check for label 'closed'
     const labels = pull_request_data.labels;
     const closed_label = labels.find((label) => label.name === "closed");
